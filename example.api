@@ -1,0 +1,72 @@
+type 'ErrorableResponse' message {
+  errorCode "int64" optional
+  errorMessage "string" optional
+}
+
+type 'ResponseBody' message {
+  maxAmount "int64" 
+  minAmount "int64"
+  nextFrom "string"
+}
+
+type 'BankCountry' message {
+    alpha2 "string"
+    id "string"
+    name "string"
+}
+
+type "Currency" spec {
+  constraints("string") {
+    enumeration 'EUR', 'USD'
+  }
+}
+
+type "PaymentState" spec {
+  constraints("string") {
+    enumeration 'COMPLETED', 'UNPROCESSED'
+  }
+}
+
+type "PaymentType" spec {
+  constraints("string") {
+    enumeration 'INTERNAL_TRANSFER', 'EXTERNAL'
+  }
+}
+
+type 'Payment' message {
+    amount "int64" optional
+    beneficiary "string"
+    beneficiaryAccount "string"
+    beneficiaryAddress1 "string"
+    beneficiaryBankAddress1 "string"
+    beneficiaryBankCountry "BankCountry"
+    beneficiaryBankName "string"
+    beneficiaryCountry "BankCountry"
+    chargeCurrency "Currency"
+    charges "int64"
+    currency "Currency"
+    dateOfComposition "string"
+    description "string"
+    externalReference "string"
+    paymentId "int64"
+    reference "string"
+    remittAccountCurrency "Currency"
+    remittAccountNumber "string"
+    remittAmount "int64"
+    remitter "string"
+    state "PaymentState"
+    swift "string"
+    type "PaymentType"
+    valueDate "string"
+}
+
+type 'PaymentsResponseBody' message(parent: "ResponseBody") {
+  payments(type:'Payment') {
+      sequence true
+      required false
+  }
+}
+
+type 'PaymentsResponse' message(parent: "ErrorableResponse") {
+   info 'PaymentsResponseBody'
+}
